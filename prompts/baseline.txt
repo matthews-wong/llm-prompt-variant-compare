@@ -1,0 +1,3 @@
+Classify the support ticket into one category: billing, outage, account or other.
+
+Ticket: {{ticket}}
