@@ -14,6 +14,26 @@ python3 -m promptcompare prompts/baseline.txt prompts/candidate.txt cases/ticket
 python3 -m promptcompare prompts/baseline.txt prompts/candidate.txt cases/tickets.jsonl --fail-on-regression
 ```
 
+Example output on the 8 bundled fixture cases, scored against the fake provider
+(not a real model):
+
+```
+cases: 8
+metric           baseline.txt candidate.txt     delta
+accuracy                 0.00          1.00     +1.00
+json validity            0.00          1.00     +1.00
+mean length             23.38         22.50     -0.88
+```
+
+The baseline scores 0 because it never asks for JSON, and output is only
+accepted when it parses as `{"category": ...}` with a known category. Model
+output is treated as untrusted: anything else counts as invalid, never repaired
+or executed. Case `t08` carries an injected instruction; the candidate prompt
+labels the ticket as data.
+
+`--fail-on-regression` exits 1 when the second prompt is worse on accuracy or
+JSON validity, so it can gate a prompt change in CI.
+
 ## Layout
 
 - `prompts/` - prompt templates with `{{variable}}` placeholders
